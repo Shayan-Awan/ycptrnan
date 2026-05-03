@@ -1,0 +1,361 @@
+{
+  "overall": {
+    "total": 5868,
+    "exited": 795,
+    "dead": 1032,
+    "alive": 4041,
+    "exit_rate": 13.5,
+    "death_rate": 17.6
+  },
+  "by_season": {
+    "count": {
+      "Summer": 2504,
+      "Winter": 2861
+    },
+    "exit_rate": {
+      "Summer": 0.1506,
+      "Winter": 0.1451
+    },
+    "death_rate": {
+      "Summer": 0.2017,
+      "Winter": 0.1818
+    },
+    "top_rate": {
+      "Summer": 0.0168,
+      "Winter": 0.0171
+    }
+  },
+  "by_industry": {
+    "count": {
+      "Consumer": 870,
+      "Real Estate and Construction": 154,
+      "Education": 124,
+      "B2B": 2997,
+      "Fintech": 623,
+      "Government": 41,
+      "Healthcare": 667,
+      "Industrials": 374
+    },
+    "exit_rate": {
+      "Consumer": 0.1747,
+      "Real Estate and Construction": 0.1688,
+      "Education": 0.1452,
+      "B2B": 0.1418,
+      "Fintech": 0.1284,
+      "Government": 0.122,
+      "Healthcare": 0.087,
+      "Industrials": 0.0829
+    },
+    "death_rate": {
+      "Consumer": 0.354,
+      "Real Estate and Construction": 0.2078,
+      "Education": 0.1613,
+      "B2B": 0.1468,
+      "Fintech": 0.1316,
+      "Government": 0.122,
+      "Healthcare": 0.1409,
+      "Industrials": 0.1337
+    },
+    "top_rate": {
+      "Consumer": 0.023,
+      "Real Estate and Construction": 0.013,
+      "Education": 0.0161,
+      "B2B": 0.0137,
+      "Fintech": 0.0225,
+      "Government": 0.0,
+      "Healthcare": 0.009,
+      "Industrials": 0.016
+    }
+  },
+  "by_year": {
+    "count": {
+      "2009.0": 42,
+      "2010.0": 63,
+      "2011.0": 105,
+      "2012.0": 149,
+      "2013.0": 98,
+      "2014.0": 152,
+      "2015.0": 215,
+      "2016.0": 224,
+      "2017.0": 241,
+      "2018.0": 277,
+      "2019.0": 371,
+      "2020.0": 437,
+      "2021.0": 727,
+      "2022.0": 633
+    },
+    "exit_rate": {
+      "2009.0": 0.3095,
+      "2010.0": 0.5079,
+      "2011.0": 0.4,
+      "2012.0": 0.3289,
+      "2013.0": 0.3469,
+      "2014.0": 0.3684,
+      "2015.0": 0.307,
+      "2016.0": 0.2143,
+      "2017.0": 0.2573,
+      "2018.0": 0.1841,
+      "2019.0": 0.1482,
+      "2020.0": 0.1579,
+      "2021.0": 0.1059,
+      "2022.0": 0.0742
+    },
+    "death_rate": {
+      "2009.0": 0.5,
+      "2010.0": 0.381,
+      "2011.0": 0.3524,
+      "2012.0": 0.4362,
+      "2013.0": 0.3673,
+      "2014.0": 0.2961,
+      "2015.0": 0.293,
+      "2016.0": 0.3348,
+      "2017.0": 0.2822,
+      "2018.0": 0.2419,
+      "2019.0": 0.2318,
+      "2020.0": 0.2288,
+      "2021.0": 0.1623,
+      "2022.0": 0.1216
+    }
+  },
+  "by_team_size": {
+    "count": {
+      "1-2": 1371,
+      "3-5": 1238,
+      "6-10": 873,
+      "11-25": 977,
+      "26-50": 485,
+      "51-200": 508,
+      "200+": 196
+    },
+    "exit_rate": {
+      "1-2": 0.1036,
+      "3-5": 0.0897,
+      "6-10": 0.1249,
+      "11-25": 0.1883,
+      "26-50": 0.1505,
+      "51-200": 0.1831,
+      "200+": 0.2602
+    },
+    "death_rate": {
+      "1-2": 0.3144,
+      "3-5": 0.1559,
+      "6-10": 0.1375,
+      "11-25": 0.1351,
+      "26-50": 0.0804,
+      "51-200": 0.0433,
+      "200+": 0.0306
+    }
+  },
+  "by_desc_length": {
+    "count": {
+      "1-5 words": 1767,
+      "6-8 words": 2324,
+      "9-12 words": 1551,
+      "13-20 words": 66
+    },
+    "exit_rate": {
+      "1-5 words": 0.1228,
+      "6-8 words": 0.1162,
+      "9-12 words": 0.1696,
+      "13-20 words": 0.1818
+    },
+    "death_rate": {
+      "1-5 words": 0.163,
+      "6-8 words": 0.1386,
+      "9-12 words": 0.1934,
+      "13-20 words": 0.3788
+    }
+  },
+  "by_keyword": {
+    "ai": {
+      "count": 1348,
+      "exit_rate_with": 4.2,
+      "exit_rate_without": 16.3,
+      "delta": -12.1,
+      "death_rate_with": 6.2
+    },
+    "machine learning": {
+      "count": 12,
+      "exit_rate_with": 41.7,
+      "exit_rate_without": 13.5,
+      "delta": 28.2,
+      "death_rate_with": 25.0
+    },
+    "ml": {
+      "count": 20,
+      "exit_rate_with": 15.0,
+      "exit_rate_without": 13.5,
+      "delta": 1.5,
+      "death_rate_with": 15.0
+    },
+    "saas": {
+      "count": 46,
+      "exit_rate_with": 23.9,
+      "exit_rate_without": 13.5,
+      "delta": 10.4,
+      "death_rate_with": 26.1
+    },
+    "b2b": {
+      "count": 52,
+      "exit_rate_with": 7.7,
+      "exit_rate_without": 13.6,
+      "delta": -5.9,
+      "death_rate_with": 13.5
+    },
+    "enterprise": {
+      "count": 61,
+      "exit_rate_with": 13.1,
+      "exit_rate_without": 13.6,
+      "delta": -0.4,
+      "death_rate_with": 8.2
+    },
+    "consumer": {
+      "count": 30,
+      "exit_rate_with": 10.0,
+      "exit_rate_without": 13.6,
+      "delta": -3.6,
+      "death_rate_with": 10.0
+    },
+    "marketplace": {
+      "count": 110,
+      "exit_rate_with": 18.2,
+      "exit_rate_without": 13.5,
+      "delta": 4.7,
+      "death_rate_with": 28.2
+    },
+    "platform": {
+      "count": 509,
+      "exit_rate_with": 16.3,
+      "exit_rate_without": 13.3,
+      "delta": 3.0,
+      "death_rate_with": 13.4
+    },
+    "api": {
+      "count": 92,
+      "exit_rate_with": 18.5,
+      "exit_rate_without": 13.5,
+      "delta": 5.0,
+      "death_rate_with": 19.6
+    },
+    "developer": {
+      "count": 19,
+      "exit_rate_with": 21.1,
+      "exit_rate_without": 13.5,
+      "delta": 7.5,
+      "death_rate_with": 21.1
+    },
+    "fintech": {
+      "count": 11,
+      "exit_rate_with": 27.3,
+      "exit_rate_without": 13.5,
+      "delta": 13.8,
+      "death_rate_with": 0.0
+    },
+    "healthcare": {
+      "count": 76,
+      "exit_rate_with": 3.9,
+      "exit_rate_without": 13.7,
+      "delta": -9.7,
+      "death_rate_with": 6.6
+    },
+    "crypto": {
+      "count": 21,
+      "exit_rate_with": 9.5,
+      "exit_rate_without": 13.6,
+      "delta": -4.0,
+      "death_rate_with": 23.8
+    },
+    "automation": {
+      "count": 77,
+      "exit_rate_with": 13.0,
+      "exit_rate_without": 13.6,
+      "delta": -0.6,
+      "death_rate_with": 7.8
+    },
+    "no-code": {
+      "count": 22,
+      "exit_rate_with": 27.3,
+      "exit_rate_without": 13.5,
+      "delta": 13.8,
+      "death_rate_with": 4.5
+    },
+    "open source": {
+      "count": 52,
+      "exit_rate_with": 21.2,
+      "exit_rate_without": 13.5,
+      "delta": 7.7,
+      "death_rate_with": 9.6
+    },
+    "workflow": {
+      "count": 18,
+      "exit_rate_with": 5.6,
+      "exit_rate_without": 13.6,
+      "delta": -8.0,
+      "death_rate_with": 16.7
+    },
+    "data": {
+      "count": 256,
+      "exit_rate_with": 15.6,
+      "exit_rate_without": 13.5,
+      "delta": 2.2,
+      "death_rate_with": 12.5
+    }
+  },
+  "by_region": {
+    "count": {
+      "Canada": 137,
+      "United States of America": 3889,
+      "France": 57,
+      "Germany": 47,
+      "Singapore": 50,
+      "India": 193,
+      "United Kingdom": 153,
+      "Brazil": 50,
+      "Mexico": 80,
+      "Remote": 208,
+      "Nigeria": 57,
+      "Unspecified": 572,
+      "Indonesia": 30
+    },
+    "exit_rate": {
+      "Canada": 0.1752,
+      "United States of America": 0.163,
+      "France": 0.1404,
+      "Germany": 0.1277,
+      "Singapore": 0.12,
+      "India": 0.114,
+      "United Kingdom": 0.1111,
+      "Brazil": 0.1,
+      "Mexico": 0.1,
+      "Remote": 0.0625,
+      "Nigeria": 0.0526,
+      "Unspecified": 0.0297,
+      "Indonesia": 0.0
+    },
+    "death_rate": {
+      "Canada": 0.146,
+      "United States of America": 0.1957,
+      "France": 0.2105,
+      "Germany": 0.1489,
+      "Singapore": 0.16,
+      "India": 0.1917,
+      "United Kingdom": 0.1634,
+      "Brazil": 0.18,
+      "Mexico": 0.2,
+      "Remote": 0.0529,
+      "Nigeria": 0.0877,
+      "Unspecified": 0.1364,
+      "Indonesia": 0.0667
+    }
+  },
+  "ai_era_comparison": {
+    "pre_2020": {
+      "count": 109,
+      "exit_rate": 14.7
+    },
+    "post_2020": {
+      "count": 1239,
+      "exit_rate": 3.3
+    }
+  }
+}

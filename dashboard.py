@@ -158,6 +158,74 @@ st.caption("Note: recent batches (2022+) haven't had enough time to exit — the
 
 st.divider()
 
+# ── Unicorn Tracker ───────────────────────────────────────────────────────────
+st.header("🦄 Unicorn Tracker: 91 Breakout Companies — What Did They Have in Common?")
+
+unicorns = df[df["top_company"] == True].copy()
+
+u1, u2, u3, u4 = st.columns(4)
+u1.metric("Total unicorns / top cos", len(unicorns))
+u2.metric("Gone public", int((unicorns["status"] == "public").sum()))
+u3.metric("Acquired", int((unicorns["status"] == "acquired").sum()))
+u4.metric("Still private", int((unicorns["status"] == "active").sum()))
+
+col1, col2 = st.columns(2)
+
+with col1:
+    uni_ind = unicorns["primary_industry"].value_counts().reset_index()
+    uni_ind.columns = ["industry", "count"]
+    fig_u1 = px.bar(
+        uni_ind, x="count", y="industry", orientation="h",
+        color="count", color_continuous_scale="Oranges",
+        title="Unicorn/top company count by industry",
+        text="count",
+    )
+    fig_u1.update_traces(textposition="outside")
+    fig_u1.update_layout(
+        height=380, showlegend=False,
+        plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+    )
+    st.plotly_chart(fig_u1, use_container_width=True)
+
+with col2:
+    uni_year = unicorns[unicorns["batch_year"].between(2007, 2023)].groupby("batch_year").size().reset_index()
+    uni_year.columns = ["batch_year", "count"]
+    uni_year["batch_year"] = uni_year["batch_year"].astype(float).astype(int)
+    fig_u2 = px.bar(
+        uni_year, x="batch_year", y="count",
+        color="count", color_continuous_scale="Oranges",
+        title="Breakout companies produced per batch year",
+        labels={"batch_year": "Batch year", "count": "# of top companies"},
+        text="count",
+    )
+    fig_u2.update_traces(textposition="outside")
+    fig_u2.update_layout(
+        height=380, showlegend=False,
+        plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+    )
+    st.plotly_chart(fig_u2, use_container_width=True)
+
+# Traits comparison: unicorns vs everyone else
+st.subheader("Unicorns vs the rest — key differences")
+trait_rows = []
+for label, mask in [("Unicorns / top cos", unicorns), ("Everyone else", df[~df["top_company"]])]:
+    trait_rows.append({
+        "Group": label,
+        "Avg team size at entry": round(mask["team_size"].median(), 0),
+        "% B2B": round((mask["primary_industry"] == "B2B").mean() * 100, 1),
+        "% Consumer": round((mask["primary_industry"] == "Consumer").mean() * 100, 1),
+        "% Fintech": round((mask["primary_industry"] == "Fintech").mean() * 100, 1),
+        "Avg description words": round(mask["desc_word_count"].median(), 1),
+    })
+st.dataframe(pd.DataFrame(trait_rows).set_index("Group"), use_container_width=True)
+
+# Browseable table
+st.subheader("Browse all top companies")
+uni_show = unicorns[["name", "batch", "status", "primary_industry", "team_size", "one_liner", "website"]].sort_values("batch")
+st.dataframe(uni_show.reset_index(drop=True), use_container_width=True, height=400)
+
+st.divider()
+
 # ── Finding 3: Industry breakdown ─────────────────────────────────────────────
 st.header("🏭 Finding #3: Consumer Exits at 17.5%, Healthcare at 8.7%")
 
@@ -325,4 +393,7 @@ st.dataframe(
 st.caption(f"Showing {min(200, len(exp))} of {len(exp)} matching companies")
 
 st.divider()
-st.markdown("*Data source: YC public company directory via Algolia. Analysis by YC Pattern Analyzer.*")
+st.markdown(
+    "*Data source: YC public company directory via Algolia. · "
+    "Made by [Shayan Awan](https://www.linkedin.com/in/shayan-awan)*"
+)

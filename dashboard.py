@@ -13,7 +13,7 @@ from plotly.subplots import make_subplots
 import streamlit as st
 
 st.set_page_config(
-    page_title="YC Pattern Analyzer",
+    page_title="YC Radar",
     page_icon=None,
     layout="wide",
     initial_sidebar_state="expanded",

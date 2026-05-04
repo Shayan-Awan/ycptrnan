@@ -14,7 +14,7 @@ import streamlit as st
 
 st.set_page_config(
     page_title="YC Pattern Analyzer",
-    page_icon="🚀",
+    page_icon=None,
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -43,11 +43,19 @@ mask = (
 filtered = df[mask]
 
 # ── Header ────────────────────────────────────────────────────────────────────
-st.title("🚀 What Actually Makes a YC Startup Succeed?")
+st.title("What Actually Makes a YC Startup Succeed?")
 st.markdown(
     f"**{len(filtered):,}** companies · {year_range[0]}–{year_range[1]} · "
     f"Live data scraped from YC's public directory"
 )
+st.markdown("""
+Y Combinator has funded nearly 6,000 companies since 2005. Everyone knows the famous ones — Stripe, Airbnb, Dropbox —
+but what about the other 5,700? We scraped the full public YC directory and ran the numbers to find what actually
+separates the winners from the rest. Not what the blog posts say. Not survivorship-biased founder advice.
+The raw data, across every batch, every industry, every team size.
+
+Five findings stood out — some confirmed intuitions, others were genuinely surprising.
+""")
 
 # ── Top-line KPIs ─────────────────────────────────────────────────────────────
 k1, k2, k3, k4 = st.columns(4)
@@ -62,7 +70,7 @@ k4.metric("Still active", f"{filtered['alive'].sum():,}",
 st.divider()
 
 # ── Finding 1: AI vs ML paradox ───────────────────────────────────────────────
-st.header("🔥 Finding #1: 'AI' Is a Red Flag. 'Machine Learning' Isn't.")
+st.header("Finding #1: 'AI' Is a Red Flag. 'Machine Learning' Isn't.")
 
 col1, col2 = st.columns([1.2, 1])
 with col1:
@@ -116,10 +124,19 @@ The post-2020 signal is even more extreme:
                        plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)")
     st.plotly_chart(fig2, use_container_width=True)
 
+st.markdown("""
+**Takeaway:** The language founders use to describe their company is a surprisingly strong signal. "AI" has become
+so overused that it now reads as noise — investors and the market have seen thousands of AI pitches and most go nowhere.
+"Machine learning," by contrast, implies a founder who understands what they're actually building at a technical level.
+The same pattern holds for "workflow" (−8 pts) and "healthcare" (−9.7 pts) — categories where the problem is clear
+but the path to a liquidity event is genuinely harder. If you're writing your one-liner, be specific. Generic positioning
+is a quiet killer.
+""")
+
 st.divider()
 
 # ── Finding 2: Year trend ─────────────────────────────────────────────────────
-st.header("📉 Finding #2: Getting Into YC Used to Mean a ~40% Shot at an Exit")
+st.header("Finding #2: Getting Into YC Used to Mean a ~40% Shot at an Exit")
 
 year_df = pd.DataFrame(findings["by_year"]["exit_rate"], index=["exit_rate"]).T.reset_index()
 year_df.columns = ["batch_year", "exit_rate"]
@@ -156,10 +173,19 @@ fig3.update_layout(
 st.plotly_chart(fig3, use_container_width=True)
 st.caption("Note: recent batches (2022+) haven't had enough time to exit — these rates will improve.")
 
+st.markdown("""
+**Takeaway:** The 2010 and 2011 cohorts were extraordinary — over 40–50% of those companies went on to exit.
+That era had less competition, cheaper capital, and a market that hadn't yet saturated with YC alumni. By 2018,
+the exit rate had dropped to ~18%, and by 2022 it sits at 7.4%. Part of this is simply time — a 2022 company
+hasn't had long enough to exit yet. But the trend is real regardless: the field is more crowded, the bar to
+stand out is higher, and the funding environment post-2021 is dramatically different. Getting into YC today
+is a different game than it was a decade ago.
+""")
+
 st.divider()
 
 # ── Unicorn Tracker ───────────────────────────────────────────────────────────
-st.header("🦄 Unicorn Tracker: 91 Breakout Companies — What Did They Have in Common?")
+st.header("Unicorn Tracker: 91 Breakout Companies — What Did They Have in Common?")
 
 unicorns = df[df["top_company"] == True].copy()
 
@@ -224,10 +250,19 @@ st.subheader("Browse all top companies")
 uni_show = unicorns[["name", "batch", "status", "primary_industry", "team_size", "one_liner", "website"]].sort_values("batch")
 st.dataframe(uni_show.reset_index(drop=True), use_container_width=True, height=400)
 
+st.markdown("""
+**Takeaway:** B2B dominates the breakout list — 45 of 91 top companies are B2B, with Consumer and Fintech a
+distant second and third. But what's more interesting is what's missing: Healthcare has 6 top companies despite
+being the third-largest industry by company count. The path from YC-funded healthcare startup to major exit is
+long and hard — regulatory timelines, clinical validation, and reimbursement cycles don't fit neatly into the
+standard VC return window. Meanwhile, the 2012–2014 era was the golden age for producing breakout companies:
+Coinbase, Instacart, Stripe, DoorDash, Zapier, Gusto, Flexport, Cruise, and GitLab all came out of those three years.
+""")
+
 st.divider()
 
 # ── Finding 3: Industry breakdown ─────────────────────────────────────────────
-st.header("🏭 Finding #3: Consumer Exits at 17.5%, Healthcare at 8.7%")
+st.header("Finding #3: Consumer Exits at 17.5%, Healthcare at 8.7%")
 
 col1, col2 = st.columns(2)
 with col1:
@@ -276,10 +311,18 @@ with col2:
     )
     st.plotly_chart(fig5, use_container_width=True)
 
+st.markdown("""
+**Takeaway:** Consumer is the boom-or-bust category. It has the highest exit rate (17.5%) but also the highest
+death rate (35.4%) — nearly 1 in 3 consumer YC companies ends up inactive. B2B is the safe bet: lower ceiling
+but also a dramatically lower death rate (14.7%), which makes sense given the stickier revenue, longer contracts,
+and more predictable sales cycles. Healthcare's low exit rate isn't necessarily a quality signal — many of those
+companies are still alive and building, just on longer timelines than the data can yet capture.
+""")
+
 st.divider()
 
 # ── Finding 4: Team size ──────────────────────────────────────────────────────
-st.header("👥 Finding #4: The Bigger You Are at YC Entry, The Better You Do")
+st.header("Finding #4: The Bigger You Are at YC Entry, The Better You Do")
 
 team_data = findings["by_team_size"]
 team_df = pd.DataFrame(team_data["exit_rate"], index=["exit_rate"]).T.reset_index()
@@ -318,10 +361,19 @@ col2.metric("11–25 person teams exit rate", "18.8%", "+5.3 pts vs avg")
 col3.metric("200+ person teams exit rate", "26.0%", "+12.5 pts vs avg")
 st.caption("Solo/duo founders have a 31% death rate — highest of any group")
 
+st.markdown("""
+**Takeaway:** This one cuts against the YC mythology of the scrappy two-person team. Companies that show up
+to YC with 11+ people exit at nearly double the rate of solo founders. The most likely explanation: larger teams
+signal more validation. A founder who's convinced 10+ people to quit their jobs and join them before YC is
+a different type of operator than someone with a side project. That said, the solo/duo path isn't dead —
+it just comes with a 31% failure rate, and the ones that make it tend to be outliers. The data doesn't say
+don't start alone. It says know what you're signing up for.
+""")
+
 st.divider()
 
 # ── Finding 5: Geography ──────────────────────────────────────────────────────
-st.header("🌍 Finding #5: Canada Quietly Outperforms the United States")
+st.header("Finding #5: Canada Quietly Outperforms the United States")
 
 region_data = findings["by_region"]
 reg_df = pd.DataFrame(region_data["exit_rate"], index=["exit_rate"]).T.reset_index()
@@ -352,14 +404,46 @@ st.plotly_chart(fig7, use_container_width=True)
 
 col1, col2 = st.columns(2)
 with col1:
-    st.info("🇨🇦 **Canada** leads at 17.5% exit rate — higher than the USA (16.3%)")
+    st.info("**Canada** leads at 17.5% exit rate — higher than the USA (16.3%)")
 with col2:
-    st.warning("📡 **Remote-first** companies have a low 6.3% exit rate but also only 5.3% death rate — they just keep existing")
+    st.warning("**Remote-first** companies have a low 6.3% exit rate but also only 5.3% death rate — they just keep existing")
+
+st.markdown("""
+**Takeaway:** Canada punches above its weight. With only 137 companies vs 3,889 from the US, Canadian founders
+outperform on exit rate. One possible reason: Canadian founders who make it to YC tend to be further along —
+they've had less access to early-stage capital at home, so by the time they apply they've built more. The remote
+finding is intriguing in a different way: remote-first companies almost never die, but they also rarely break out.
+They become sustainable, quiet businesses — which might be exactly what their founders wanted, but it doesn't
+show up as an exit in this dataset.
+""")
+
+st.divider()
+
+# ── Key Takeaways ─────────────────────────────────────────────────────────────
+st.header("Key Takeaways")
+st.markdown("""
+After looking at 5,868 companies across 20 years of YC batches, here's what the data actually says:
+
+**1. Language is a signal, not just packaging.**
+The words in your one-liner correlate with real outcomes. "AI" has become a liability. Specificity — "machine learning," "SaaS," "developer tools" — is associated with higher exits. Founders who know exactly what they're building tend to describe it exactly.
+
+**2. The game has gotten harder.**
+A 2010 YC company had a ~50% shot at an exit. A 2022 company sits at 7.4% — and even accounting for the time needed to mature, the trend is real. More companies in each batch, more competition post-YC, and a tighter funding market all contribute.
+
+**3. Consumer is high risk, high reward. B2B is the baseline.**
+Consumer companies exit more often but die far more often too. B2B is more predictable — slower to break out, but far less likely to go to zero. If you're optimizing for survival odds, B2B is the safer path. If you want a shot at something massive, Consumer can get you there faster.
+
+**4. Team size matters more than the mythology suggests.**
+YC is famous for funding two-person teams, and those stories dominate the narrative. But the data shows that larger teams at entry have dramatically better outcomes. Validation before YC — in the form of people willing to join you — is a strong predictor of success.
+
+**5. Where you're from matters less than you think, but not zero.**
+The US dominates by volume, but Canada outperforms by rate. The most likely explanation isn't geography — it's selection effects. Founders who clear higher local bars before reaching YC tend to be further along when they get there.
+""")
 
 st.divider()
 
 # ── Explorer ──────────────────────────────────────────────────────────────────
-st.header("🔎 Company Explorer")
+st.header("Company Explorer")
 col1, col2 = st.columns([1, 3])
 with col1:
     status_filter = st.selectbox("Status", ["All", "exited", "active", "dead"])
@@ -395,7 +479,7 @@ st.caption(f"Showing {min(200, len(exp))} of {len(exp)} matching companies")
 st.divider()
 
 # ── Success Predictor ─────────────────────────────────────────────────────────
-st.header("🎯 Success Predictor: How Would Your Startup Score?")
+st.header("Success Predictor: How Would Your Startup Score?")
 st.markdown("Enter your startup's details and see how you'd stack up against 5,868 YC companies.")
 
 with st.form("predictor_form"):

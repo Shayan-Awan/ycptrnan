@@ -393,6 +393,127 @@ st.dataframe(
 st.caption(f"Showing {min(200, len(exp))} of {len(exp)} matching companies")
 
 st.divider()
+
+# ── Success Predictor ─────────────────────────────────────────────────────────
+st.header("🎯 Success Predictor: How Would Your Startup Score?")
+st.markdown("Enter your startup's details and see how you'd stack up against 5,868 YC companies.")
+
+with st.form("predictor_form"):
+    p1, p2 = st.columns(2)
+    with p1:
+        p_industry = st.selectbox("Industry", sorted(df["primary_industry"].dropna().unique().tolist()))
+        p_team = st.number_input("Team size", min_value=1, max_value=10000, value=3)
+        p_region = st.selectbox("Region", sorted(df["primary_region"].dropna().unique().tolist()))
+    with p2:
+        p_season = st.selectbox("YC batch season", ["Summer", "Winter", "Spring", "Fall"])
+        p_oneliner = st.text_input("Your one-liner", placeholder="e.g. Stripe for Southeast Asia")
+
+    submitted = st.form_submit_button("Score my startup", use_container_width=True)
+
+if submitted and p_oneliner:
+    BASELINE = 13.5
+
+    scores = {}
+
+    # Industry score
+    ind_exits = df.groupby("primary_industry")["exited"].mean() * 100
+    ind_score = ind_exits.get(p_industry, BASELINE)
+    scores["Industry"] = (ind_score, BASELINE, f"{p_industry} cohort exits at {ind_score:.1f}%")
+
+    # Team size score
+    def team_exit(size):
+        mask = pd.cut(
+            pd.Series([size]),
+            bins=[0, 2, 5, 10, 25, 50, 200, 10000],
+            labels=["1-2","3-5","6-10","11-25","26-50","51-200","200+"]
+        )
+        bucket = mask.iloc[0]
+        sub = df[df["team_bucket"] == bucket]
+        return sub["exited"].mean() * 100 if len(sub) else BASELINE
+
+    t_score = team_exit(p_team)
+    scores["Team size"] = (t_score, BASELINE, f"Team of {p_team} — this bucket exits at {t_score:.1f}%")
+
+    # Region score
+    reg_exits = df.groupby("primary_region")["exited"].mean() * 100
+    reg_score = reg_exits.get(p_region, BASELINE)
+    scores["Region"] = (reg_score, BASELINE, f"{p_region} founders exit at {reg_score:.1f}%")
+
+    # Season score
+    season_exits = df[df["season"].isin(["Summer","Winter"])].groupby("season")["exited"].mean() * 100
+    s_score = season_exits.get(p_season, BASELINE)
+    scores["Batch season"] = (s_score, BASELINE, f"{p_season} batches exit at {s_score:.1f}%")
+
+    # Keyword score
+    import re as _re
+    KEYWORDS = {
+        "ai": -12.1, "machine learning": 28.2, "saas": 10.4,
+        "no-code": 13.8, "workflow": -8.0, "healthcare": -9.7,
+        "b2b": -5.9, "crypto": -4.0, "blockchain": -4.0,
+        "open source": 7.7, "developer": 7.5, "marketplace": 4.7,
+        "platform": 3.0, "api": 5.0, "fintech": 13.8,
+    }
+    ol_lower = p_oneliner.lower()
+    kw_hits = [(kw, delta) for kw, delta in KEYWORDS.items() if _re.search(r"\b" + _re.escape(kw) + r"\b", ol_lower)]
+    kw_delta = sum(d for _, d in kw_hits)
+    kw_score = BASELINE + kw_delta
+    if kw_hits:
+        kw_note = "Keywords found: " + ", ".join(f"{kw} ({d:+.0f})" for kw, d in kw_hits)
+    else:
+        kw_note = "No strong keywords detected — neutral signal"
+    scores["Description keywords"] = (kw_score, BASELINE, kw_note)
+
+    # Final score = weighted average of factor scores
+    weights = {"Industry": 0.30, "Team size": 0.25, "Region": 0.15, "Batch season": 0.10, "Description keywords": 0.20}
+    final = sum(scores[k][0] * weights[k] for k in scores)
+    final = max(1.0, min(final, 60.0))
+
+    # Display
+    st.subheader(f"Your score: **{final:.1f}%** predicted exit probability")
+
+    color = "#22c55e" if final >= BASELINE else "#ef4444"
+    delta_label = f"{final - BASELINE:+.1f} pts vs YC average"
+
+    gauge = go.Figure(go.Indicator(
+        mode="gauge+number+delta",
+        value=final,
+        delta={"reference": BASELINE, "suffix": "%"},
+        number={"suffix": "%"},
+        gauge={
+            "axis": {"range": [0, 55]},
+            "bar": {"color": color},
+            "steps": [
+                {"range": [0, 10], "color": "#fecaca"},
+                {"range": [10, 20], "color": "#fef9c3"},
+                {"range": [20, 55], "color": "#dcfce7"},
+            ],
+            "threshold": {"line": {"color": "gray", "width": 2}, "thickness": 0.75, "value": BASELINE},
+        },
+        title={"text": "Exit probability vs 13.5% YC baseline"},
+    ))
+    gauge.update_layout(height=300, paper_bgcolor="rgba(0,0,0,0)")
+    st.plotly_chart(gauge, use_container_width=True)
+
+    # Factor breakdown
+    st.subheader("Factor breakdown")
+    for factor, (score, base, note) in scores.items():
+        delta = score - base
+        icon = "▲" if delta > 0 else ("▼" if delta < 0 else "●")
+        color_tag = "green" if delta > 0 else ("red" if delta < 0 else "gray")
+        st.markdown(f"**{factor}** — :{color_tag}[{icon} {delta:+.1f} pts]  \n_{note}_")
+
+    # Similar companies
+    st.subheader("Most similar YC companies to you")
+    sim = df[df["primary_industry"] == p_industry].copy()
+    sim["team_diff"] = (sim["team_size"] - p_team).abs()
+    sim = sim.sort_values(["top_company", "team_diff"], ascending=[False, True])
+    show_sim = ["name", "batch", "status", "team_size", "one_liner", "website"]
+    st.dataframe(sim[show_sim].head(10).reset_index(drop=True), use_container_width=True)
+
+elif submitted and not p_oneliner:
+    st.warning("Enter a one-liner to get your score.")
+
+st.divider()
 st.markdown(
     "*Data source: YC public company directory via Algolia. · "
     "Made by [Shayan Awan](https://www.linkedin.com/in/shayan-awan)*"
